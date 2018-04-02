@@ -1,8 +1,11 @@
+require 'pp'
+
 module Percy
   module Capybara
     class Client
       module Builds
         def initialize_build(options = {})
+          puts "CLIENT INIT BUILD"
           return unless enabled? # Silently skip if the client is disabled.
           return @current_build if build_initialized?
 
@@ -16,6 +19,9 @@ module Percy
           Percy.logger.debug { "All build resources loaded (#{Time.now - start}s)" }
 
           rescue_connection_failures do
+            puts "CONNECTION FAILURES"
+            puts client.config.repo
+            pp options
             @current_build = client.create_build(client.config.repo, options)
             _upload_missing_build_resources(build_resources) unless build_resources.empty?
           end
