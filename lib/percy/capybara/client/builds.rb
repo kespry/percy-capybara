@@ -5,7 +5,7 @@ module Percy
     class Client
       module Builds
         def initialize_build(options = {})
-          Percy.logger.debug "CLIENT INIT BUILD"
+          Percy.logger.debug { "CLIENT INIT BUILD" }
           return unless enabled? # Silently skip if the client is disabled.
           return @current_build if build_initialized?
 
@@ -19,9 +19,9 @@ module Percy
           Percy.logger.debug { "All build resources loaded (#{Time.now - start}s)" }
 
           rescue_connection_failures do
-            Percy.logger.debug "CONNECTION FAILURES"
-            Percy.logger.debug client.config.repo
-            Percy.logger.debug options
+            Percy.logger.debug { "CONNECTION FAILURES" }
+            Percy.logger.debug { client.config.repo }
+            Percy.logger.debug { options }
             @current_build = client.create_build(client.config.repo, options)
             _upload_missing_build_resources(build_resources) unless build_resources.empty?
           end
